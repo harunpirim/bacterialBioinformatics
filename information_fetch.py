@@ -16,11 +16,22 @@ def get_go_terms(protein_id, results):
 
 fasta_file = "uniprot-download_true_format_fasta_query__28_28proteome_3AUP00005856-2023.06.08-20.05.13.50.fasta"
 json_file = "uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
+motif_file = "motifs_wo_profiles.fasta"
 
 # Load the JSON data
 with open(json_file) as file:
     data = json.load(file)
     results = data["results"]
+
+#organize motifs
+motifs = {}
+for record in SeqIO.parse(motif_file, "fasta"):
+    id = record.id.split("|")[1].strip()
+    seq = str(record.seq)
+    if id not in motifs:
+        motifs[id] = [seq]
+    else:
+        motifs[id].append(seq)
 
 proteins = {}
 for record in SeqIO.parse(fasta_file, "fasta"):
@@ -39,7 +50,8 @@ for record in SeqIO.parse(fasta_file, "fasta"):
         "aromaticity": a_seq.aromaticity(),
         "flexibility": a_seq.flexibility(),
         "sec_sruct_frac": a_seq.secondary_structure_fraction(),
-        "go_terms": get_go_terms(protein_id, results)
+        "go_terms": get_go_terms(protein_id, results),
+        "motifs": motifs[id]
     }
 
     proteins[protein_id] = protein
@@ -56,6 +68,6 @@ for protein_id, protein_info in proteins.items():
     print(f"Aromaticity: {protein_info['aromaticity']}")
     print(f"Flexibility: {protein_info['flexibility']}")
     print(f"Secondary Structure Fraction: {protein_info['sec_sruct_frac']}")
-    for term in protein_info['go_terms']:
-        print(f"Gene Ontology Term: {term}")
+    print(f"Gene Ontology Terms: {protein_info['go_terms']}")
+    print(f"Motifs: {protein_info['motifs']}")
     print()
