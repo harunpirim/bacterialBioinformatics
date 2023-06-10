@@ -2,6 +2,21 @@ import json
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
+def create_dictionary_from_tsv(tsv_file):
+    dictionary = {}
+
+    with open(tsv_file, 'r') as file:
+        reader = csv.reader(file, delimiter='\t')
+
+        headers = next(reader) 
+
+        for row in reader:
+            key = row[0].split("|")[1].strip()  #grabs only protein id
+            values = {header: value for header, value in zip(headers[1:], row[1:])}
+            dictionary[key] = values
+
+    return dictionary
+
 def get_go_terms(protein_id, results):
     go_terms = []
     for result in results:
@@ -16,7 +31,10 @@ def get_go_terms(protein_id, results):
 
 fasta_file = "uniprot-download_true_format_fasta_query__28_28proteome_3AUP00005856-2023.06.08-20.05.13.50.fasta"
 json_file = "uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
-motif_file = "data\motifs_wo_profiles.fasta"
+motif_file = "data\\motifs_wo_profiles.fasta"
+dpc_file = "data\\dpc.tsv"
+tpc_file = "data\\tpc.tsv"
+paac_file = "data\\paac.tsv" 
 
 # Load the JSON data
 with open(json_file) as file:
@@ -32,6 +50,13 @@ for record in SeqIO.parse(motif_file, "fasta"):
         motifs[id] = [seq]
     else:
         motifs[id].append(seq)
+
+        import csv
+
+#load composition features
+dpcs = create_dictionary_from_tsv(dpc_file)
+tpcs = create_dictionary_from_tsv(tpc_file)
+paacs = create_dictionary_from_tsv(paac_file)
 
 proteins = {}
 for record in SeqIO.parse(fasta_file, "fasta"):
@@ -51,7 +76,10 @@ for record in SeqIO.parse(fasta_file, "fasta"):
         "flexibility": a_seq.flexibility(),
         "sec_sruct_frac": a_seq.secondary_structure_fraction(),
         "go_terms": get_go_terms(protein_id, results),
-        "motifs": motifs[id]
+        "motifs": motifs[id],
+        "dpc": dpcs[id],
+        "tpc": tpcs[id],
+        "paac": paacs[id],
     }
 
     proteins[protein_id] = protein
@@ -70,4 +98,7 @@ for protein_id, protein_info in proteins.items():
     print(f"Secondary Structure Fraction: {protein_info['sec_sruct_frac']}")
     print(f"Gene Ontology Terms: {protein_info['go_terms']}")
     print(f"Motifs: {protein_info['motifs']}")
+    print(f"Dipeptide Composition: {protein_info['dpc']}")
+    print(f"Tripeptide Composition: {protein_info['tpc']}")
+    print(f"Pseudo Amino Acid Composition: {protein_info['paac']}")
     print()
