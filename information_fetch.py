@@ -16,7 +16,7 @@ def get_go_terms(protein_id, results):
 
 fasta_file = "uniprot-download_true_format_fasta_query__28_28proteome_3AUP00005856-2023.06.08-20.05.13.50.fasta"
 json_file = "uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
-motif_file = "motifs_wo_profiles.fasta"
+motif_file = "data\motifs_wo_profiles.fasta"
 
 # Load the JSON data
 with open(json_file) as file:
