@@ -54,6 +54,20 @@ def get_transmembrane(protein_id, results):
                         transmembrane = 1
     return transmembrane
 
+def get_binding_preference(protein_id, results):
+    bp = []
+    for result in results:
+        if result["primaryAccession"] == protein_id:
+            if "keywords" in result:
+                keywords = result["keywords"]
+                for keyword in keywords:
+                    kw = keyword["name"]
+                    if (kw == "DNA-binding" or kw == "RNA-binding"):
+                        bp.append("DNA/RNA-binding")
+                    elif (kw == "Nucleotide-binding" or kw == "Metal-binding"):
+                        bp.append(kw)
+    return bp
+
 fasta_file = "uniprot-download_true_format_fasta_query__28_28proteome_3AUP00005856-2023.06.08-20.05.13.50.fasta"
 json_file = "uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
 motif_file = "data\\motifs_wo_profiles.fasta"
@@ -125,12 +139,13 @@ for record in SeqIO.parse(fasta_file, "fasta"):
         "moran": morans[id],
         "subcell_locations": get_subcellular_locations(protein_id, results),
         "transmembrane": get_transmembrane(protein_id, results),
+        "binding_preference": get_binding_preference(protein_id, results),
     }
 
     proteins[protein_id] = protein
 
 for protein_id, protein_info in proteins.items():
-    print(f"Protein ID: {protein_id}")
+    #print(f"Protein ID: {protein_id}")
     # print(f"Protein Sequence: {protein_info['seq']}")
     # print(f"Protein Length: {protein_info['length']}")
     # print(f"Molecular Weight: {protein_info['m_weight']}")
@@ -153,5 +168,6 @@ for protein_id, protein_info in proteins.items():
     # print(f"Grouped Amino Acid Composition: {protein_info['gaac']}")
     # print(f"Moran Autocorrelation: {protein_info['moran']}")
     # print(f"Subcellular Locations: {protein_info['subcell_locations']}")
-    print(f"Transmembrane?: {protein_info['transmembrane']}")
+    # print(f"Transmembrane?: {protein_info['transmembrane']}")
+    # print(f"Binding Preference: {protein_info['binding_preference']}")
     print()
