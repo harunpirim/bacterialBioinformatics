@@ -34,7 +34,13 @@ json_file = "uniprot-download_true_format_json_query__28_28proteome_3AUP00005856
 motif_file = "data\\motifs_wo_profiles.fasta"
 dpc_file = "data\\dpc.tsv"
 tpc_file = "data\\tpc.tsv"
-paac_file = "data\\paac.tsv" 
+paac_file = "data\\paac.tsv"
+cdtc_file = "data\\cdtc.tsv"
+cdtd_file = "data\\cdtd.tsv"
+cdtt_file = "data\\cdtt.tsv"
+ctriad_file = "data\\ctriad.tsv"
+gaac_file = "data\\gaac.tsv"
+moran_file = "data\\moran.tsv"
 
 # Load the JSON data
 with open(json_file) as file:
@@ -57,6 +63,12 @@ for record in SeqIO.parse(motif_file, "fasta"):
 dpcs = create_dictionary_from_tsv(dpc_file)
 tpcs = create_dictionary_from_tsv(tpc_file)
 paacs = create_dictionary_from_tsv(paac_file)
+cdtcs = create_dictionary_from_tsv(cdtc_file)
+cdtds = create_dictionary_from_tsv(cdtt_file)
+cdtts = create_dictionary_from_tsv(cdtd_file)
+ctriads = create_dictionary_from_tsv(ctriad_file)
+gaacs = create_dictionary_from_tsv(gaac_file)
+morans = create_dictionary_from_tsv(moran_file)
 
 proteins = {}
 for record in SeqIO.parse(fasta_file, "fasta"):
@@ -80,6 +92,12 @@ for record in SeqIO.parse(fasta_file, "fasta"):
         "dpc": dpcs[id],
         "tpc": tpcs[id],
         "paac": paacs[id],
+        "cdtc": cdtcs[id],
+        "cdtd": cdtds[id],
+        "cdtt": cdtts[id],
+        "ctriad": ctriads[id],
+        "gaac": gaacs[id],
+        "moran": morans[id],
     }
 
     proteins[protein_id] = protein
@@ -101,4 +119,10 @@ for protein_id, protein_info in proteins.items():
     print(f"Dipeptide Composition: {protein_info['dpc']}")
     print(f"Tripeptide Composition: {protein_info['tpc']}")
     print(f"Pseudo Amino Acid Composition: {protein_info['paac']}")
+    print(f"Composition: {protein_info['cdtc']}")
+    print(f"Distribution: {protein_info['cdtd']}")
+    print(f"Translation: {protein_info['cdtt']}")
+    print(f"Conjoint Triad: {protein_info['ctriad']}")
+    print(f"Grouped Amino Acid Composition: {protein_info['gaac']}")
+    print(f"Moran Autocorrelation: {protein_info['moran']}")
     print()
