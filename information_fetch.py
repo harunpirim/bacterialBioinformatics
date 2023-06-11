@@ -21,13 +21,38 @@ def get_go_terms(protein_id, results):
     go_terms = []
     for result in results:
         if result["primaryAccession"] == protein_id:
-            references = result["uniProtKBCrossReferences"]
-            for reference in references:
-                if reference["database"] == "GO":
-                    go_id = reference["id"]
-                    go_term = reference["properties"][0]["value"]
-                    go_terms.append((go_id, go_term))
+            if "uniProtKBCrossReferences" in result:
+                references = result["uniProtKBCrossReferences"]
+                for reference in references:
+                    if reference["database"] == "GO":
+                        go_id = reference["id"]
+                        go_term = reference["properties"][0]["value"]
+                        go_terms.append((go_id, go_term))
     return go_terms
+
+def get_subcellular_locations(protein_id, results):
+    subcell_locations = []
+    for result in results:
+        if result["primaryAccession"] == protein_id:
+            if "comments" in result:
+                comments = result["comments"]
+                for comment in comments:
+                    if comment["commentType"] == "SUBCELLULAR LOCATION":
+                        locations = comment["subcellularLocations"]
+                        for location in locations:
+                            subcell_locations.append(location["location"]["value"])
+    return subcell_locations
+
+def get_transmembrane(protein_id, results):
+    transmembrane = 0
+    for result in results:
+        if result["primaryAccession"] == protein_id:
+            if "features" in result:
+                features = result["features"]
+                for feature in features:
+                    if feature["type"] == "Transmembrane":
+                        transmembrane = 1
+    return transmembrane
 
 fasta_file = "uniprot-download_true_format_fasta_query__28_28proteome_3AUP00005856-2023.06.08-20.05.13.50.fasta"
 json_file = "uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
@@ -98,31 +123,35 @@ for record in SeqIO.parse(fasta_file, "fasta"):
         "ctriad": ctriads[id],
         "gaac": gaacs[id],
         "moran": morans[id],
+        "subcell_locations": get_subcellular_locations(protein_id, results),
+        "transmembrane": get_transmembrane(protein_id, results),
     }
 
     proteins[protein_id] = protein
 
 for protein_id, protein_info in proteins.items():
     print(f"Protein ID: {protein_id}")
-    print(f"Protein Sequence: {protein_info['seq']}")
-    print(f"Protein Length: {protein_info['length']}")
-    print(f"Molecular Weight: {protein_info['m_weight']}")
-    print(f"Instability Index: {protein_info['instab_index']}")
-    print(f"Isoelectric Point: {protein_info['isoele_point']}")
-    print(f"Gravy: {protein_info['gravy']}")
-    print(f"Amino Acid Count: {protein_info['amino_count']}")
-    print(f"Aromaticity: {protein_info['aromaticity']}")
-    print(f"Flexibility: {protein_info['flexibility']}")
-    print(f"Secondary Structure Fraction: {protein_info['sec_sruct_frac']}")
-    print(f"Gene Ontology Terms: {protein_info['go_terms']}")
-    print(f"Motifs: {protein_info['motifs']}")
-    print(f"Dipeptide Composition: {protein_info['dpc']}")
-    print(f"Tripeptide Composition: {protein_info['tpc']}")
-    print(f"Pseudo Amino Acid Composition: {protein_info['paac']}")
-    print(f"Composition: {protein_info['cdtc']}")
-    print(f"Distribution: {protein_info['cdtd']}")
-    print(f"Translation: {protein_info['cdtt']}")
-    print(f"Conjoint Triad: {protein_info['ctriad']}")
-    print(f"Grouped Amino Acid Composition: {protein_info['gaac']}")
-    print(f"Moran Autocorrelation: {protein_info['moran']}")
+    # print(f"Protein Sequence: {protein_info['seq']}")
+    # print(f"Protein Length: {protein_info['length']}")
+    # print(f"Molecular Weight: {protein_info['m_weight']}")
+    # print(f"Instability Index: {protein_info['instab_index']}")
+    # print(f"Isoelectric Point: {protein_info['isoele_point']}")
+    # print(f"Gravy: {protein_info['gravy']}")
+    # print(f"Amino Acid Count: {protein_info['amino_count']}")
+    # print(f"Aromaticity: {protein_info['aromaticity']}")
+    # print(f"Flexibility: {protein_info['flexibility']}")
+    # print(f"Secondary Structure Fraction: {protein_info['sec_sruct_frac']}")
+    # print(f"Gene Ontology Terms: {protein_info['go_terms']}")
+    # print(f"Motifs: {protein_info['motifs']}")
+    # print(f"Dipeptide Composition: {protein_info['dpc']}")
+    # print(f"Tripeptide Composition: {protein_info['tpc']}")
+    # print(f"Pseudo Amino Acid Composition: {protein_info['paac']}")
+    # print(f"Composition: {protein_info['cdtc']}")
+    # print(f"Distribution: {protein_info['cdtd']}")
+    # print(f"Translation: {protein_info['cdtt']}")
+    # print(f"Conjoint Triad: {protein_info['ctriad']}")
+    # print(f"Grouped Amino Acid Composition: {protein_info['gaac']}")
+    # print(f"Moran Autocorrelation: {protein_info['moran']}")
+    # print(f"Subcellular Locations: {protein_info['subcell_locations']}")
+    print(f"Transmembrane?: {protein_info['transmembrane']}")
     print()
