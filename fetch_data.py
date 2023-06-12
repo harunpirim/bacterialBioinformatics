@@ -5,6 +5,7 @@ import gdown
 
 os.makedirs('data', exist_ok=True)
 
+#files used to run information_fetch.py
 ifeature_url = "https://drive.google.com/uc?id=1p0jY2Q1HRO7GE9vcbGngzCE24hGyIs0d"
 prosite_wo_url = "https://drive.google.com/uc?id=1C3KqmV8FewuxYQ31SqLQj_xzyfliVqYg"
 proteins_url = "https://drive.google.com/uc?id=1dTuW5r8oKeNvHwukVqD7fMmf5lYVmx5M"
@@ -19,3 +20,8 @@ gdown.download(ifeature_url, ifeature_output, quiet=False)
 gdown.download(prosite_wo_url, prosite_wo_output, quiet=False)
 gdown.download(proteins_url, proteins_output, quiet=False)
 gdown.download(uniprot_url, uniprot_output, quiet=False)
+
+#file containing all collected protein information (information_fetch.py output)
+protein_info_url = "https://drive.google.com/uc?id=1rs3Q1z3-5WKYxzv37OIGg1a55jggG6J0"
+protein_info_output = "protein_information.json"
+gdown.download(protein_info_url, protein_info_output, quiet=False)

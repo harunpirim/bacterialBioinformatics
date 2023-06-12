@@ -10,6 +10,7 @@ protein_file = "data\\proteins-2023.06.08-20.05.13.50.fasta"
 uniprot_file = "data\\UniProt.json"
 motif_file = "data\\Prosite_wo.json"
 ifeature_file = "data\\iFeature.json"
+output_file = "protein_information.json"
 
 #--- Functions: Assign Annotations (UniProt) ---
 def assign_annotations():
@@ -81,7 +82,11 @@ def assign_iFeature_data():
     for feature, ids in features.items():
         for id, value in ids.items():
             proteins[id][feature] = value
-                
+
+#--- Functions: Generate JSON Based on Dictionary
+def dict_to_json(dict, file_path):
+    with open(file_path, 'w') as json_file:
+        json.dump(dict, json_file, indent=4)
 
 #--- Main: Generate Protein Dictionary ---
 for record in SeqIO.parse(protein_file, "fasta"):
@@ -90,7 +95,7 @@ for record in SeqIO.parse(protein_file, "fasta"):
     a_seq = ProteinAnalysis(seq)
 
     protein = {
-        "seq" : seq,
+        "seq" : str(seq),
         "length" : len(record),
         "m_weight": a_seq.molecular_weight(),
         "instab_index": a_seq.instability_index(),
@@ -121,32 +126,34 @@ assign_annotations()
 assign_motifs()
 assign_iFeature_data()
 
+#--- Output: Generate CSV File w/ Protein Information
+dict_to_json(proteins, output_file)
 
 #--- Test: Print Proteins ---
-for protein_id, protein_info in proteins.items():
-    print(f"Protein ID: {protein_id}")
-    # print(f"Protein Sequence: {protein_info['seq']}")
-    # print(f"Protein Length: {protein_info['length']}")
-    # print(f"Molecular Weight: {protein_info['m_weight']}")
-    # print(f"Instability Index: {protein_info['instab_index']}")
-    # print(f"Isoelectric Point: {protein_info['isoele_point']}")
-    # print(f"Gravy: {protein_info['gravy']}")
-    # print(f"Amino Acid Count: {protein_info['amino_count']}")
-    # print(f"Aromaticity: {protein_info['aromaticity']}")
-    # print(f"Flexibility: {protein_info['flexibility']}")
-    # print(f"Secondary Structure Fraction: {protein_info['sec_sruct_frac']}")
-    # print(f"Gene Ontology Terms: {protein_info['go_terms']}")
-    # print(f"Motifs: {protein_info['motifs']}")
-    # print(f"Dipeptide Composition: {protein_info['dpc']}")
-    # print(f"Tripeptide Composition: {protein_info['tpc']}")
-    # print(f"Pseudo Amino Acid Composition: {protein_info['paac']}")
-    # print(f"Composition: {protein_info['cdtc']}")
-    # print(f"Distribution: {protein_info['cdtd']}")
-    # print(f"Translation: {protein_info['cdtt']}")
-    # print(f"Conjoint Triad: {protein_info['ctriad']}")
-    # print(f"Grouped Amino Acid Composition: {protein_info['gaac']}")
-    # print(f"Moran Autocorrelation: {protein_info['moran']}")
-    # print(f"Subcellular Locations: {protein_info['subcell_locations']}")
-    # print(f"Transmembrane?: {protein_info['transmembrane']}")
-    # print(f"Binding Preference: {protein_info['binding_preference']}")
-    print()
+# for protein_id, protein_info in proteins.items():
+#     print(f"Protein ID: {protein_id}")
+#     print(f"Protein Sequence: {protein_info['seq']}")
+#     print(f"Protein Length: {protein_info['length']}")
+#     print(f"Molecular Weight: {protein_info['m_weight']}")
+#     print(f"Instability Index: {protein_info['instab_index']}")
+#     print(f"Isoelectric Point: {protein_info['isoele_point']}")
+#     print(f"Gravy: {protein_info['gravy']}")
+#     print(f"Amino Acid Count: {protein_info['amino_count']}")
+#     print(f"Aromaticity: {protein_info['aromaticity']}")
+#     print(f"Flexibility: {protein_info['flexibility']}")
+#     print(f"Secondary Structure Fraction: {protein_info['sec_sruct_frac']}")
+#     print(f"Gene Ontology Terms: {protein_info['go_terms']}")
+#     print(f"Motifs: {protein_info['motifs']}")
+#     print(f"Dipeptide Composition: {protein_info['dpc']}")
+#     print(f"Tripeptide Composition: {protein_info['tpc']}")
+#     print(f"Pseudo Amino Acid Composition: {protein_info['paac']}")
+#     print(f"Composition: {protein_info['cdtc']}")
+#     print(f"Distribution: {protein_info['cdtd']}")
+#     print(f"Translation: {protein_info['cdtt']}")
+#     print(f"Conjoint Triad: {protein_info['ctriad']}")
+#     print(f"Grouped Amino Acid Composition: {protein_info['gaac']}")
+#     print(f"Moran Autocorrelation: {protein_info['moran']}")
+#     print(f"Subcellular Locations: {protein_info['subcell_locations']}")
+#     print(f"Transmembrane?: {protein_info['transmembrane']}")
+#     print(f"Binding Preference: {protein_info['binding_preference']}")
+#     print()
