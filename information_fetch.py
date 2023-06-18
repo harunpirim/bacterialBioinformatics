@@ -105,6 +105,7 @@ for record in SeqIO.parse(protein_file, "fasta"):
         "aromaticity": a_seq.aromaticity(),
         "flexibility": a_seq.flexibility(),
         "sec_sruct_frac": a_seq.secondary_structure_fraction(),
+        "ext_coeff": a_seq.molar_extinction_coefficient(),
         "go_terms": [],
         "motifs": [],
         "dpc": [],

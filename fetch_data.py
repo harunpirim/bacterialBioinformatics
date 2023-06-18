@@ -22,6 +22,6 @@ gdown.download(proteins_url, proteins_output, quiet=False)
 gdown.download(uniprot_url, uniprot_output, quiet=False)
 
 #file containing all collected protein information (information_fetch.py output)
-protein_info_url = "https://drive.google.com/uc?id=1rs3Q1z3-5WKYxzv37OIGg1a55jggG6J0"
+protein_info_url = "https://drive.google.com/uc?id=1iOpW5YSOxxJ-cy5XHyHXkRjJ5T-jUrtU"
 protein_info_output = "protein_information.json"
 gdown.download(protein_info_url, protein_info_output, quiet=False)
