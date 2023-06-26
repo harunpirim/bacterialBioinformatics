@@ -1,4 +1,4 @@
-import json
+import json, csv
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
@@ -10,6 +10,7 @@ protein_file = "data\\proteins-2023.06.08-20.05.13.50.fasta"
 uniprot_file = "data\\UniProt.json"
 motif_file = "data\\Prosite_wo.json"
 ifeature_file = "data\\iFeature.json"
+names_file = "data\\names.tsv"
 output_file = "protein_information.json"
 
 #--- Functions: Assign Annotations (UniProt) ---
@@ -83,6 +84,19 @@ def assign_iFeature_data():
         for id, value in ids.items():
             proteins[id][feature] = value
 
+#--- Functions: Assign Protein Names* ---
+# *names exctracted from EMBL database
+def assign_names():
+    global proteins
+    data = []
+    with open(names_file, 'r') as file:
+        tsv_reader = csv.reader(file, delimiter='\t')
+        next(tsv_reader)
+        for row in tsv_reader:
+            data.append(row)
+    for protein in data:
+        proteins[protein[0]]['name'] = protein[2]
+
 #--- Functions: Generate JSON Based on Dictionary
 def dict_to_json(dict, file_path):
     with open(file_path, 'w') as json_file:
@@ -96,6 +110,7 @@ for record in SeqIO.parse(protein_file, "fasta"):
 
     protein = {
         "seq" : str(seq),
+        "name" : "",
         "length" : len(record),
         "m_weight": a_seq.molecular_weight(),
         "instab_index": a_seq.instability_index(),
@@ -126,13 +141,14 @@ for record in SeqIO.parse(protein_file, "fasta"):
 assign_annotations()
 assign_motifs()
 assign_iFeature_data()
+assign_names()
 
 #--- Output: Generate CSV File w/ Protein Information
 dict_to_json(proteins, output_file)
 
 #--- Test: Print Proteins ---
 # for protein_id, protein_info in proteins.items():
-#     print(f"Protein ID: {protein_id}")
+#     print(f"Protein ID: {protein_id}, Name: {protein_info['name']}")
 #     print(f"Protein Sequence: {protein_info['seq']}")
 #     print(f"Protein Length: {protein_info['length']}")
 #     print(f"Molecular Weight: {protein_info['m_weight']}")
