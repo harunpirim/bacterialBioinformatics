@@ -25,15 +25,15 @@ def create_dictionary_from_iFeature_tsv(ifeature_file):
     return dictionary
 
 ifeature_files = {
-"dpc" : "data\\dpc.tsv",
-"tpc" : "data\\tpc.tsv",
-"paac" : "data\\paac.tsv",
-"cdtc" : "data\\cdtc.tsv",
-"cdtd" : "data\\cdtd.tsv",
-"cdtt" : "data\\cdtt.tsv",
-"ctriad" : "data\\ctriad.tsv",
-"gaac" : "data\\gaac.tsv",
-"moran" : "data\\moran.tsv"
+"dpc" : "raw_data\\dpc.tsv",
+#"tpc" : "data\\tpc.tsv",
+"paac" : "raw_data\\paac.tsv",
+"ctdc" : "raw_data\\ctdc.tsv",
+"ctdt" : "raw_data\\ctdt.tsv",
+"ctdd" : "raw_data\\ctdd.tsv",
+"ctriad" : "raw_data\\ctriad.tsv",
+"gaac" : "raw_data\\gaac.tsv",
+"moran" : "raw_data\\moran.tsv"
 }
 
 combined_dictionary = {}
@@ -41,27 +41,27 @@ combined_dictionary = {}
 for key, value in ifeature_files.items():
     combined_dictionary[key] = create_dictionary_from_iFeature_tsv(value)
 
-# nested_dict_to_json(combined_dictionary, "iFeature.json")
+nested_dict_to_json(combined_dictionary, "data\\train\\train_iFeature.json")
 
-#--- Prosite cleaning ---
-motif_file = "data\\motifs_wo_profiles.fasta"
+# #--- Prosite cleaning ---
+# motif_file = "data\\motifs_wo_profiles.fasta"
 
-motifs = {}
-for record in SeqIO.parse(motif_file, "fasta"):
-    id = record.id.split("|")[1].strip()
-    seq = str(record.seq)
-    if id not in motifs:
-        motifs[id] = [seq]
-    else:
-        motifs[id].append(seq)
+# motifs = {}
+# for record in SeqIO.parse(motif_file, "fasta"):
+#     id = record.id.split("|")[1].strip()
+#     seq = str(record.seq)
+#     if id not in motifs:
+#         motifs[id] = [seq]
+#     else:
+#         motifs[id].append(seq)
 
-# nested_dict_to_json(motifs, "Prosite.json")
+# # nested_dict_to_json(motifs, "Prosite.json")
 
-#--- UniProt cleaning ---
-uniprot_file = "raw_data\\uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
+# #--- UniProt cleaning ---
+# uniprot_file = "raw_data\\uniprot-download_true_format_json_query__28_28proteome_3AUP000058566-2023.06.08-21.46.26.53.json"
 
-dict = json_to_nested_dict(uniprot_file)
-# nested_dict_to_json(dict, "data\\UniProt.json")
+# dict = json_to_nested_dict(uniprot_file)
+# # nested_dict_to_json(dict, "data\\UniProt.json")
 
 
 
