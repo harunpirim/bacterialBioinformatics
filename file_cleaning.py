@@ -25,15 +25,15 @@ def create_dictionary_from_iFeature_tsv(ifeature_file):
     return dictionary
 
 ifeature_files = {
-"dpc" : "raw_data\\dpc.tsv",
+"dpc" : "data\\train\\ifeature\\dpc.tsv",
 #"tpc" : "data\\tpc.tsv",
-"paac" : "raw_data\\paac.tsv",
-"ctdc" : "raw_data\\ctdc.tsv",
-"ctdt" : "raw_data\\ctdt.tsv",
-"ctdd" : "raw_data\\ctdd.tsv",
-"ctriad" : "raw_data\\ctriad.tsv",
-"gaac" : "raw_data\\gaac.tsv",
-"moran" : "raw_data\\moran.tsv"
+"paac" : "data\\train\\ifeature\\paac.tsv",
+"ctdc" : "data\\train\\ifeature\\ctdc.tsv",
+"ctdt" : "data\\train\\ifeature\\ctdt.tsv",
+"ctdd" : "data\\train\\ifeature\\ctdd.tsv",
+"ctriad" : "data\\train\\ifeature\\ctriad.tsv",
+"gaac" : "data\\train\\ifeature\\gaac.tsv",
+"moran" : "data\\train\\ifeature\\moran.tsv"
 }
 
 combined_dictionary = {}
