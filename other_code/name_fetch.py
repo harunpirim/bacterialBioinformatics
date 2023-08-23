@@ -1,3 +1,4 @@
+#File used to match ncbi protein names to uniprot
 from Bio import SeqIO
 import json, csv
 
